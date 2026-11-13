@@ -1,0 +1,10 @@
+# Guía personal de estudio (no se sube)
+GUIA_EXPLICADA_ETL.md
+
+# Dataset de energía descomprimido: pesa 131 MB y GitHub no acepta archivos de más de 100 MB.
+# Se sube el .zip (20 MB); el .txt se obtiene descomprimiéndolo o con: scrapy crawl fuentes -a solo=energia
+datos_sucios/household_power_consumption.txt
+
+# Python
+__pycache__/
+*.pyc

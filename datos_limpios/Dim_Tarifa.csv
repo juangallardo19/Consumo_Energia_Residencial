@@ -1,0 +1,10 @@
+﻿ID_Periodo_Tarifa,Año,Semestre,Fecha_Inicio,Fecha_Fin,Precio_kWh_Sin_Impuestos_EUR,Precio_kWh_Sin_IVA_EUR,Precio_kWh_Con_Impuestos_EUR,Es_Estimado,Periodo_Origen_Precio,Fuente
+2006-S2,2006,2,2006-07-01,2006-12-31,0.0924,0.1049,0.1222,Sí,2007-S2,"Eurostat nrg_pc_204 (hogares 2.500-4.999 kWh/año, Francia)"
+2007-S1,2007,1,2007-01-01,2007-06-30,0.0924,0.1049,0.1222,Sí,2007-S2,"Eurostat nrg_pc_204 (hogares 2.500-4.999 kWh/año, Francia)"
+2007-S2,2007,2,2007-07-01,2007-12-31,0.0924,0.1049,0.1222,No,2007-S2,"Eurostat nrg_pc_204 (hogares 2.500-4.999 kWh/año, Francia)"
+2008-S1,2008,1,2008-01-01,2008-06-30,0.0914,0.1038,0.1213,No,2008-S1,"Eurostat nrg_pc_204 (hogares 2.500-4.999 kWh/año, Francia)"
+2008-S2,2008,2,2008-07-01,2008-12-31,0.091,0.1033,0.1203,No,2008-S2,"Eurostat nrg_pc_204 (hogares 2.500-4.999 kWh/año, Francia)"
+2009-S1,2009,1,2009-01-01,2009-06-30,0.0908,0.1031,0.1206,No,2009-S1,"Eurostat nrg_pc_204 (hogares 2.500-4.999 kWh/año, Francia)"
+2009-S2,2009,2,2009-07-01,2009-12-31,0.0908,0.1035,0.1207,No,2009-S2,"Eurostat nrg_pc_204 (hogares 2.500-4.999 kWh/año, Francia)"
+2010-S1,2010,1,2010-01-01,2010-06-30,0.094,0.1095,0.1283,No,2010-S1,"Eurostat nrg_pc_204 (hogares 2.500-4.999 kWh/año, Francia)"
+2010-S2,2010,2,2010-07-01,2010-12-31,0.0995,0.1155,0.135,No,2010-S2,"Eurostat nrg_pc_204 (hogares 2.500-4.999 kWh/año, Francia)"

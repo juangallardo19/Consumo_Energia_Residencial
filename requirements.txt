@@ -1,0 +1,6 @@
+# Requiere además Java 17 (para Spark)
+pyspark>=4.0
+pandas
+pyarrow
+scrapy>=2.13
+scipy        # para la prueba ANOVA (siguiente fase)

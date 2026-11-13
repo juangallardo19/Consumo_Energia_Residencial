@@ -1,0 +1,85 @@
+[
+  {
+    "fuente": "Meteostat - estación 07156 París-Montsouris",
+    "archivo": "clima_paris_montsouris_horario.csv.gz",
+    "url": "https://bulk.meteostat.net/v2/hourly/07156.csv.gz",
+    "estado_http": 200,
+    "tipo_contenido": "application/x-gzip",
+    "bytes": 2445893,
+    "sha256": "6fb2d3d3071129744e7d370f8ae5847f4d39c7a9bf1b46b2b09b2fde07d0600b",
+    "descargado_utc": "2026-11-13T03:01:48+00:00"
+  },
+  {
+    "fuente": "API calendrier.api.gouv.fr",
+    "archivo": "festivos_francia_2006.json",
+    "url": "https://calendrier.api.gouv.fr/jours-feries/metropole/2006.json",
+    "estado_http": 200,
+    "tipo_contenido": "application/json; charset=utf-8",
+    "bytes": 318,
+    "sha256": "3b514b8f8572e5a260eada007b70f53f27e9e8cb44ca4fbd19c2860f8f813519",
+    "descargado_utc": "2026-11-13T03:01:51+00:00"
+  },
+  {
+    "fuente": "API calendrier.api.gouv.fr",
+    "archivo": "festivos_francia_2007.json",
+    "url": "https://calendrier.api.gouv.fr/jours-feries/metropole/2007.json",
+    "estado_http": 200,
+    "tipo_contenido": "application/json; charset=utf-8",
+    "bytes": 318,
+    "sha256": "dff2a6c8b91b02fc414c7a69fe7027721e8faf967090dbc366411fa863d17f92",
+    "descargado_utc": "2026-11-13T03:01:52+00:00"
+  },
+  {
+    "fuente": "API calendrier.api.gouv.fr",
+    "archivo": "festivos_francia_2008.json",
+    "url": "https://calendrier.api.gouv.fr/jours-feries/metropole/2008.json",
+    "estado_http": 200,
+    "tipo_contenido": "application/json; charset=utf-8",
+    "bytes": 293,
+    "sha256": "759151e982c02b1b1e75abef273b1e44847c84151177565ab76a3433e4851acd",
+    "descargado_utc": "2026-11-13T03:01:53+00:00"
+  },
+  {
+    "fuente": "API calendrier.api.gouv.fr",
+    "archivo": "festivos_francia_2009.json",
+    "url": "https://calendrier.api.gouv.fr/jours-feries/metropole/2009.json",
+    "estado_http": 200,
+    "tipo_contenido": "application/json; charset=utf-8",
+    "bytes": 318,
+    "sha256": "3422824da560878274a923ea45be79426ce5a12b8d30a3ba6424b23416d91a1e",
+    "descargado_utc": "2026-11-13T03:01:54+00:00"
+  },
+  {
+    "fuente": "API calendrier.api.gouv.fr",
+    "archivo": "festivos_francia_2010.json",
+    "url": "https://calendrier.api.gouv.fr/jours-feries/metropole/2010.json",
+    "estado_http": 200,
+    "tipo_contenido": "application/json; charset=utf-8",
+    "bytes": 318,
+    "sha256": "0b49d73e653042b4e6b33e45761dcf6309fad69ee8927586b75fcd526f4ebf1d",
+    "descargado_utc": "2026-11-13T03:01:55+00:00"
+  },
+  {
+    "fuente": "Espejo GitHub jbrownlee/Datasets (copia del zip original de UCI)",
+    "archivo": "household_power_consumption.zip",
+    "url": "https://raw.githubusercontent.com/jbrownlee/Datasets/master/household_power_consumption.zip",
+    "estado_http": 200,
+    "tipo_contenido": "application/zip",
+    "bytes": 20640916,
+    "sha256": "9f84b46ade8a2d8e1286ec4b2b6c2987a45a755c59f263be3b3b3d10dfbda3ff",
+    "descargado_utc": "2026-11-13T03:09:41+00:00",
+    "archivos_extraidos": [
+      "household_power_consumption.txt"
+    ]
+  },
+  {
+    "fuente": "Eurostat nrg_pc_204",
+    "archivo": "tarifas_electricidad_eurostat.csv",
+    "url": "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/nrg_pc_204/S.E7000.KWH2500-4999.KWH.X_TAX+X_VAT+I_TAX.EUR.FR/?format=SDMX-CSV&startPeriod=2006-S1&endPeriod=2011-S1",
+    "estado_http": 200,
+    "tipo_contenido": "application/vnd.sdmx.data+csv;version=1.0.0",
+    "bytes": 2407,
+    "sha256": "cdcdd007c28ea6efe9b623f66aa4b89447f443143cd0b0ab560fcb8ba3d8d690",
+    "descargado_utc": "2026-11-13T03:01:59+00:00"
+  }
+]

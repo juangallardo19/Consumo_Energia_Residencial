@@ -1,0 +1,20 @@
+{
+  "energia_filas_leidas": 2075259,
+  "energia_minutos_validos": 2049247,
+  "energia_minutos_rechazados": 26012,
+  "energia_kwh_minutos_validos": 37282.8174333365,
+  "energia_horas_formadas": 34168,
+  "energia_horas_aceptadas": 34151,
+  "energia_kwh_horas_aceptadas": 37274.20509999998,
+  "filas_Dim_Fecha": 1826,
+  "filas_Dim_Hora": 24,
+  "filas_Dim_Clima": 1396,
+  "filas_Dim_Tarifa": 9,
+  "filas_Dim_Electrodomestico": 4,
+  "filas_Fact_Consumo_Hora": 34151,
+  "filas_Fact_Consumo_Electrodomestico": 136604,
+  "periodo_medidor": [
+    "2006-12-16",
+    "2010-11-26"
+  ]
+}
