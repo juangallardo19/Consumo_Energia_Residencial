@@ -1,5 +1,0 @@
-﻿ID_Electrodomestico,Zona,Equipos,Origen
-1,Cocina,"Lavavajillas, horno y microondas",Sub_metering_1
-2,Lavandería,"Lavadora, secadora, nevera y una luz",Sub_metering_2
-3,Calentador y aire acondicionado,Calentador de agua eléctrico y aire acondicionado,Sub_metering_3
-4,Resto de la vivienda,"Equipos no cubiertos por los 3 submedidores (iluminación, electrónica, etc.)",Calculado (total - submedidores)

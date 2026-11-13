@@ -40,43 +40,102 @@ Consumo_Energia_Residencial/
 ├── etl/
 │   ├── etl_energia.py         <- T + L: limpieza con PySpark y construcción del modelo estrella
 │   └── validar_calidad.py     <- pruebas automáticas de calidad sobre el resultado (38 pruebas)
-├── datos_limpios/             <- tablas finales para Power BI (CSV y parquet/) + reportes
+├── datos_limpios/             <- (se genera, no está en GitHub) tablas finales para Power BI (CSV y parquet/)
 │   ├── Dim_Fecha, Dim_Hora, Dim_Clima, Dim_Tarifa, Dim_Electrodomestico
 │   ├── Fact_Consumo_Hora, Fact_Consumo_Electrodomestico
 │   ├── reporte_calidad.md     <- cuántas filas afectó cada regla
 │   ├── reporte_validacion.md  <- resultado de las 38 pruebas
 │   └── metricas_etl.json
-└── rechazados/                <- cuarentena: cada fila eliminada con su motivo
+└── rechazados/                <- (se genera, no está en GitHub) cuarentena: cada fila eliminada con su motivo
 ```
 
-## Cómo ejecutarlo
+## Cómo generar los datos limpios (paso a paso)
 
-Requisitos: Python 3.11+ y Java 17.
+En GitHub solo están el código y los datos crudos. Las carpetas `datos_limpios/` y `rechazados/` **no se
+suben**: cada integrante las genera en su computador con el ETL. Así el repositorio pesa poco y nadie sube
+resultados desactualizados.
+
+### Paso 0 · Requisitos (una sola vez)
+
+- **Python 3.11 o superior**: comprueba con `python --version`.
+- **Java 17** (Spark lo necesita): comprueba con `java -version`. Si no lo tienes, instala
+  [Eclipse Temurin 17](https://adoptium.net/temurin/releases/?version=17) y marca la opción
+  "Set JAVA_HOME" durante la instalación.
+- Las librerías de Python. Se instalan desde la carpeta del proyecto con:
 
 ```bash
 pip install -r requirements.txt
 ```
 
+### Paso 1 · Clonar el repositorio
+
 ```bash
-cd extraccion && scrapy crawl fuentes && cd ..
+git clone https://github.com/juangallardo19/Consumo_Energia_Residencial.git
 ```
+
+```bash
+cd Consumo_Energia_Residencial
+```
+
+### Paso 2 · Tener los datos crudos (Extract)
+
+`household_power_consumption.txt` (131 MB) no está en GitHub porque supera el límite de 100 MB. Hay dos
+formas de conseguirlo. Elige **una**:
+
+- **Opción A, rápida y sin internet:** descomprime `datos_sucios/household_power_consumption.zip` dentro de
+  la misma carpeta `datos_sucios/` (clic derecho → "Extraer todo…" → elige `datos_sucios`). Debe quedar
+  `datos_sucios/household_power_consumption.txt`.
+- **Opción B, la extracción completa con Scrapy:** vuelve a descargar las 4 fuentes desde internet y
+  descomprime el zip automáticamente.
+
+```bash
+cd extraccion
+```
+
+```bash
+python -m scrapy crawl fuentes
+```
+
+```bash
+cd ..
+```
+
+  Para bajar una sola fuente se agrega `-a solo=energia` (o `clima`, `festivos`, `tarifas`).
+
+### Paso 3 · Limpiar y construir el modelo (Transform + Load)
+
+Desde la carpeta raíz del proyecto (tarda unos 3 minutos):
 
 ```bash
 python etl/etl_energia.py
 ```
 
+Al terminar debe decir `ETL terminado` y crear:
+- `datos_limpios/`: las 7 tablas en CSV y en `parquet/`, más `reporte_calidad.md` y `metricas_etl.json`.
+- `rechazados/`: las filas eliminadas, cada una con su `Motivo`.
+
+### Paso 4 · Verificar que quedó bien
+
 ```bash
 python etl/validar_calidad.py
 ```
 
-> **Si clonaste el repositorio:** `household_power_consumption.txt` (131 MB) no está en GitHub porque supera
-> el límite de 100 MB. Descomprime `datos_sucios/household_power_consumption.zip` en esa misma carpeta, o
-> corre el paso 1, que lo descarga y lo descomprime solo.
+La última línea debe ser **`38/38 pruebas pasan`**. Si alguna prueba dice `FALLA`, no uses los datos en
+Power BI. Revisa `datos_limpios/reporte_validacion.md`.
 
-1. **Extract**: `scrapy crawl fuentes` descarga todo a `datos_sucios/` (se puede pedir una sola fuente con
-   `-a solo=energia|clima|festivos|tarifas`).
-2. **Transform + Load**: `etl_energia.py` (~3 min) limpia y genera `datos_limpios/` y `rechazados/`.
-3. **Verificar**: `validar_calidad.py` debe terminar en `38/38 pruebas pasan`.
+### Paso 5 · Conectar Power BI
+
+Abre el `.pbix` y, en **Transformar datos → Administrar parámetros**, cambia `RutaDatos` por la ruta de **tu**
+carpeta `datos_limpios\parquet\` (terminada en `\`). Luego dale **Actualizar**.
+
+### Problemas comunes
+
+| Error | Solución |
+|---|---|
+| `FileNotFoundError ... household_power_consumption.txt` | No hiciste el paso 2: descomprime el zip. |
+| `JAVA_HOME is not set` / `Java gateway process exited` | Falta Java 17 o la variable `JAVA_HOME`. Instala Temurin 17 con la opción "Set JAVA_HOME" y abre una terminal nueva. |
+| `No module named 'pyspark'` (o `scrapy`) | Repite `pip install -r requirements.txt`. |
+| Scrapy no logra descargar de UCI | No es grave: el spider usa automáticamente una copia idéntica en GitHub. O usa la opción A del paso 2. |
 
 ## Resultado actual del ETL
 

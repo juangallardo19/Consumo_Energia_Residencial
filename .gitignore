@@ -5,6 +5,10 @@ GUIA_EXPLICADA_ETL.md
 # Se sube el .zip (20 MB); el .txt se obtiene descomprimiéndolo o con: scrapy crawl fuentes -a solo=energia
 datos_sucios/household_power_consumption.txt
 
+# Resultados del ETL: no se suben, se generan con etl/etl_energia.py (ver README, "Cómo generar los datos limpios")
+datos_limpios/
+rechazados/
+
 # Python
 __pycache__/
 *.pyc
