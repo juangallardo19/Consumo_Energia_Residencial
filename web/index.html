@@ -3,17 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Consumo de Energía Residencial · Grupo 7</title>
+  <title>Consumo de Energía Residencial | Grupo 7</title>
   <meta name="description" content="Cuatro años de consumo eléctrico minuto a minuto de una casa en Sceaux (Francia): ETL con Scrapy y PySpark, modelo estrella y dashboard en Power BI.">
-  <meta name="theme-color" content="#151619">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23ff8a3d'/%3E%3Cpath d='M18 4 8 18h7l-2 10 10-14h-7z' fill='%23151619'/%3E%3C/svg%3E">
+  <meta name="theme-color" content="#f2efe8">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='9' fill='%23ffd666' stroke='%231d1d1f' stroke-width='2'/%3E%3Cpath d='M18 5 8 18h7l-2 9 10-13h-7z' fill='%231d1d1f'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <div class="grain" aria-hidden="true"></div>
 
   <!-- ============ NAV ============ -->
   <header class="nav" id="nav">
@@ -21,7 +20,7 @@
       <span class="brand__mark" aria-hidden="true">
         <svg viewBox="0 0 24 24"><path d="M13.5 2 5 13.5h6L9.5 22 19 9.5h-6z"/></svg>
       </span>
-      <span class="brand__text">Energía<b>Casa</b></span>
+      <span class="brand__text">Energía en casa</span>
     </a>
     <nav class="nav__links" aria-label="Secciones">
       <a href="#resumen">Resumen</a>
@@ -30,119 +29,99 @@
       <a href="#clima">Clima</a>
       <a href="#pipeline">Pipeline</a>
     </nav>
-    <a href="#dashboard" class="btn btn--accent btn--sm">Ver dashboard</a>
+    <a href="#dashboard" class="btn btn--coral btn--sm">Ver dashboard</a>
   </header>
 
   <main>
-    <!-- ============ HERO ============ -->
+    <!-- ============ HERO: la casa dibujada con sus 4 zonas a escala ============ -->
     <section class="hero" id="inicio">
-      <div class="hero__bg" aria-hidden="true">
-        <div class="layer layer--glow" data-speed="0.25"></div>
-        <div class="layer layer--grid" data-speed="0.1"></div>
-        <svg class="layer layer--wires" data-speed="0.35" viewBox="0 0 1440 600" preserveAspectRatio="none">
-          <path class="wire" d="M-20 140 Q 360 260 720 150 T 1460 170"/>
-          <path class="wire wire--2" d="M-20 210 Q 380 330 760 220 T 1460 250"/>
-          <circle class="spark" r="4"><animateMotion dur="6s" repeatCount="indefinite" path="M-20 140 Q 360 260 720 150 T 1460 170"/></circle>
-          <circle class="spark spark--2" r="3"><animateMotion dur="8s" begin="2s" repeatCount="indefinite" path="M-20 210 Q 380 330 760 220 T 1460 250"/></circle>
-        </svg>
-      </div>
-
-      <div class="hero__inner">
+      <div class="container hero__inner">
         <div class="hero__copy">
-          <p class="eyebrow reveal">Proyecto 5 · Ingeniería de Datasets · Grupo 7</p>
-          <h1 class="hero__title">
-            <span class="line"><span>¿En qué se va</span></span>
-            <span class="line"><span>la <em>energía</em> de</span></span>
-            <span class="line"><span>una casa?</span></span>
-          </h1>
-          <p class="hero__lead reveal">Cuatro años de mediciones minuto a minuto de una vivienda en Sceaux, Francia, cruzadas con clima, festivos y tarifas eléctricas.</p>
-          <div class="hero__cta reveal">
-            <a href="#resumen" class="btn btn--accent">Explorar los datos</a>
-            <a href="#dashboard" class="btn btn--ghost">Abrir Power BI</a>
+          <p class="eyebrow hero-in">Proyecto final del Grupo 7</p>
+          <h1 class="hero__title" id="hero-title">¿En qué se va la energía de una casa?</h1>
+          <p class="hero__lead hero-in">Cuatro años de mediciones minuto a minuto de una vivienda en Sceaux, Francia, cruzadas con clima, festivos y tarifas eléctricas.</p>
+          <div class="hero__cta hero-in">
+            <a href="#resumen" class="btn btn--ink">Explorar los datos</a>
+            <a href="#dashboard" class="btn btn--line">Abrir el dashboard</a>
           </div>
         </div>
 
-        <div class="hero__visual">
-          <div class="orb" data-speed="-0.15" data-mouse="18">
-            <div class="orb__ring"></div>
-            <div class="orb__core">
-              <span class="orb__value"><span data-count="37274.21" data-decimals="0">0</span></span>
-              <span class="orb__unit">kWh analizados</span>
+        <figure class="house" id="house" aria-label="La casa dividida según el consumo de cada zona">
+          <div class="house__roof" data-speed="-0.45">
+            <svg viewBox="0 0 400 150" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M6 146 200 6l194 140Z"/>
+            </svg>
+            <span class="house__chimney"></span>
+            <span class="house__total"><b data-count="37274.21">0</b> kWh</span>
+          </div>
+          <div class="house__body">
+            <div class="room room--resto" data-speed="0.12" style="--c:var(--mint)">
+              <span class="room__pct"><span data-count="51.2" data-decimals="1">0</span>%</span>
+              <span class="room__name">Resto de la vivienda</span>
+            </div>
+            <div class="room room--calor" data-speed="-0.2" style="--c:var(--sky)">
+              <span class="room__pct"><span data-count="35.5" data-decimals="1">0</span>%</span>
+              <span class="room__name">Calentador y A/C</span>
+            </div>
+            <div class="room room--lav" data-speed="-0.32" style="--c:var(--lilac)">
+              <span class="room__pct"><span data-count="7.1" data-decimals="1">0</span>%</span>
+              <span class="room__name">Lavandería</span>
+            </div>
+            <div class="room room--coc" data-speed="-0.5" style="--c:var(--yellow)">
+              <span class="room__pct"><span data-count="6.2" data-decimals="1">0</span>%</span>
+              <span class="room__name">Cocina</span>
             </div>
           </div>
-
-          <svg class="house" data-speed="0.08" data-mouse="8" viewBox="0 0 320 260" aria-hidden="true">
-            <defs>
-              <linearGradient id="roofG" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#3a3c42"/><stop offset="1" stop-color="#2a2c31"/></linearGradient>
-              <linearGradient id="winG" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ffd27a"/><stop offset="1" stop-color="#ff8a3d"/></linearGradient>
-            </defs>
-            <rect x="52" y="112" width="216" height="132" rx="10" fill="#24262b" stroke="#3a3c42" stroke-width="2"/>
-            <path d="M30 120 160 30l130 90" fill="url(#roofG)" stroke="#45474e" stroke-width="2" stroke-linejoin="round"/>
-            <rect x="214" y="44" width="22" height="50" rx="3" fill="#2a2c31" stroke="#45474e" stroke-width="2"/>
-            <rect class="win" x="78" y="140" width="52" height="42" rx="6" fill="url(#winG)"/>
-            <rect class="win win--2" x="190" y="140" width="52" height="42" rx="6" fill="url(#winG)"/>
-            <rect x="140" y="178" width="40" height="66" rx="6" fill="#1b1c20" stroke="#3a3c42" stroke-width="2"/>
-            <circle cx="171" cy="212" r="2.5" fill="#ff8a3d"/>
-            <path d="M104 140v42M78 161h52M216 140v42M190 161h52" stroke="#24262b" stroke-width="3" opacity=".55"/>
-          </svg>
-
-          <div class="chip chip--a" data-speed="-0.35" data-mouse="26">
-            <span class="chip__dot"></span><b data-count="11.122" data-decimals="1">0</b>&nbsp;kW pico
-          </div>
-          <div class="chip chip--b" data-speed="-0.55" data-mouse="34">
-            <span class="chip__dot chip__dot--cool"></span><b data-count="26.05" data-decimals="1">0</b>&nbsp;kWh / día
-          </div>
-          <div class="chip chip--c" data-speed="-0.25" data-mouse="22">
-            <span class="chip__dot chip__dot--warm"></span>€&nbsp;<b data-count="4597.81" data-decimals="0">0</b>&nbsp;en total
-          </div>
-        </div>
+          <div class="house__ground" data-speed="0.2"></div>
+          <figcaption class="house__caption">Cada cuarto ocupa el área que le corresponde en el consumo total, de diciembre de 2006 a noviembre de 2010.</figcaption>
+        </figure>
       </div>
-
-      <a href="#cifras" class="scroll-hint" aria-label="Bajar">
-        <span>Scroll</span><i></i>
-      </a>
     </section>
 
-    <!-- ============ CIFRAS / EMBUDO ============ -->
-    <section class="section funnel" id="cifras">
+    <!-- ============ DEL DATO CRUDO AL LIMPIO (secuencia real) ============ -->
+    <section class="section" id="cifras">
       <div class="container">
         <div class="section__head">
-          <p class="eyebrow reveal">Del dato crudo al dato confiable</p>
+          <p class="eyebrow">Del dato crudo al dato confiable</p>
           <h2 class="h2 split">2 millones de minutos, depurados regla por regla.</h2>
         </div>
-        <ol class="funnel__steps">
-          <li class="fstep">
-            <span class="fstep__num" data-count="2075259">0</span>
-            <span class="fstep__label">minutos leídos</span>
+        <ol class="steps" id="steps">
+          <li class="step" style="--c:var(--card)">
+            <span class="step__n">1</span>
+            <span class="step__num" data-count="2075259">0</span>
+            <span class="step__label">minutos leídos del archivo de UCI</span>
           </li>
-          <li class="fstep">
-            <span class="fstep__num" data-count="2049247">0</span>
-            <span class="fstep__label">minutos válidos <small>(26.012 a cuarentena)</small></span>
+          <li class="step" style="--c:var(--card)">
+            <span class="step__n">2</span>
+            <span class="step__num" data-count="2049247">0</span>
+            <span class="step__label">minutos válidos; 26.012 quedan en cuarentena con su motivo</span>
           </li>
-          <li class="fstep">
-            <span class="fstep__num" data-count="34151">0</span>
-            <span class="fstep__label">horas con ≥ 45 min medidos</span>
+          <li class="step" style="--c:var(--card)">
+            <span class="step__n">3</span>
+            <span class="step__num" data-count="34151">0</span>
+            <span class="step__label">horas con al menos 45 minutos medidos</span>
           </li>
-          <li class="fstep fstep--accent">
-            <span class="fstep__num" data-count="1431">0</span>
-            <span class="fstep__label">días analizados · 38/38 pruebas de calidad</span>
+          <li class="step step--done" style="--c:var(--yellow)">
+            <span class="step__n">4</span>
+            <span class="step__num" data-count="1431">0</span>
+            <span class="step__label">días analizados, con 38 de 38 pruebas de calidad aprobadas</span>
           </li>
         </ol>
       </div>
     </section>
 
     <!-- ============ RESUMEN INTERACTIVO ============ -->
-    <section class="section resumen" id="resumen">
+    <section class="section" id="resumen">
       <div class="container">
         <div class="section__head section__head--row">
           <div>
-            <p class="eyebrow reveal">Resumen · réplica de la página del dashboard</p>
+            <p class="eyebrow">Página Resumen del reporte</p>
             <h2 class="h2 split">Los mismos números del Power BI, ahora en vivo.</h2>
           </div>
-          <p class="section__note reveal">Filtra por año y estación como en los segmentadores del reporte. Las tarjetas y las gráficas se recalculan al instante.</p>
+          <p class="section__note">Filtra por año y estación como en los segmentadores del reporte. Las tarjetas y las gráficas se recalculan al instante.</p>
         </div>
 
-        <div class="panel panel--dark reveal-card">
+        <div class="board">
           <div class="filters" role="group" aria-label="Filtros">
             <div class="filters__group">
               <span class="filters__label">Año</span>
@@ -155,33 +134,33 @@
           </div>
 
           <div class="kpis">
-            <article class="kpi kpi--hero">
-              <span class="kpi__label">Energía total</span>
+            <article class="kpi" style="--c:var(--yellow)">
+              <span class="tag">Energía total</span>
               <span class="kpi__value"><span id="k-energia">0</span><small>kWh</small></span>
               <span class="kpi__sub" id="k-energia-sub">&nbsp;</span>
             </article>
-            <article class="kpi">
-              <span class="kpi__label">Costo de la energía</span>
+            <article class="kpi" style="--c:var(--lilac)">
+              <span class="tag">Costo de la energía</span>
               <span class="kpi__value"><small>€</small><span id="k-costo">0</span></span>
               <span class="kpi__sub">tarifa Eurostat con impuestos</span>
             </article>
-            <article class="kpi">
-              <span class="kpi__label">Consumo promedio diario</span>
+            <article class="kpi" style="--c:var(--sky)">
+              <span class="tag">Promedio diario</span>
               <span class="kpi__value"><span id="k-promedio">0</span><small>kWh</small></span>
               <span class="kpi__sub" id="k-dias">&nbsp;</span>
             </article>
-            <article class="kpi">
-              <span class="kpi__label">Potencia máxima</span>
+            <article class="kpi" style="--c:var(--mint)">
+              <span class="tag">Potencia máxima</span>
               <span class="kpi__value"><span id="k-potencia">0</span><small>kW</small></span>
               <span class="kpi__sub">pico registrado en un minuto</span>
             </article>
           </div>
 
           <div class="charts-grid">
-            <figure class="chart-card chart-card--wide">
+            <figure class="chart-card">
               <figcaption>
                 <span class="chart-title">Energía por mes</span>
-                <span class="chart-legend"><i class="lg lg--bar"></i>kWh del mes</span>
+                <span class="chart-legend"><i class="lg"></i>kWh del mes</span>
               </figcaption>
               <div class="chart" id="chart-mes" role="img" aria-label="Energía total por mes, diciembre 2006 a noviembre 2010"></div>
             </figure>
@@ -194,43 +173,42 @@
       </div>
     </section>
 
-    <!-- ============ UN DÍA EN LA CASA (pinned) ============ -->
+    <!-- ============ UN DÍA EN LA CASA (sección fija) ============ -->
     <section class="dia" id="dia">
       <div class="dia__pin">
         <div class="container dia__layout">
           <div class="dia__copy">
             <p class="eyebrow">Promedio por hora del día</p>
             <h2 class="h2">Un día en la casa</h2>
-            <p class="dia__clock"><span id="dia-hora">00:00</span><span class="dia__franja" id="dia-franja">Madrugada</span></p>
-            <p class="dia__kwh"><b id="dia-kwh">0,00</b> kWh en esa hora</p>
-            <p class="dia__text">La casa despierta a las 7:00, baja el ritmo al mediodía y alcanza su <b>pico a las 20:00 (1,90 kWh)</b>: más de 4 veces lo que gasta a las 3:00 de la madrugada (0,44 kWh).</p>
-          </div>
-          <div class="dia__chart">
-            <div class="sky" aria-hidden="true">
-              <div class="sky__sun" id="sky-sun"></div>
+            <div class="clock">
+              <span class="clock__time" id="dia-hora">00:00</span>
+              <span class="tag" id="dia-franja">Madrugada</span>
             </div>
+            <p class="dia__kwh"><b id="dia-kwh">0,00</b> kWh en esa hora</p>
+            <p class="dia__text">La casa despierta a las 7:00, baja el ritmo al mediodía y alcanza su pico a las 20:00 con 1,90 kWh: más de 4 veces lo que gasta a las 3:00 de la madrugada (0,44 kWh).</p>
+          </div>
+          <div class="chart-card chart-card--day">
+            <div class="sky" aria-hidden="true"><div class="sky__sun" id="sky-sun"></div></div>
             <div class="chart chart--day" id="chart-hora" role="img" aria-label="Consumo promedio por hora del día"></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ============ ZONAS (claro) ============ -->
-    <section class="section light" id="zonas">
+    <!-- ============ ZONAS ============ -->
+    <section class="section" id="zonas">
       <div class="container">
-        <div class="section__head section__head--row">
-          <div>
-            <p class="eyebrow eyebrow--dark reveal">Proporción por electrodoméstico</p>
-            <h2 class="h2 split">La mitad de la energía no tiene submedidor.</h2>
-          </div>
-          <p class="section__note section__note--dark reveal">Los 3 submedidores del dataset UCI cubren cocina, lavandería y calentador + aire acondicionado. El resto se calcula como total − submedidores.</p>
+        <div class="section__head">
+          <p class="eyebrow">Proporción por electrodoméstico</p>
+          <h2 class="h2 split">La mitad de la energía no tiene submedidor.</h2>
+          <p class="section__note section__note--below">Los 3 submedidores del dataset UCI cubren cocina, lavandería y calentador + aire acondicionado. El resto se calcula como total − submedidores.</p>
         </div>
 
         <div class="zonas">
-          <div class="donut-wrap reveal-card">
+          <div class="donut-wrap">
             <svg class="donut" id="donut" viewBox="0 0 220 220" role="img" aria-label="Distribución del consumo por zona"></svg>
             <div class="donut__center">
-              <span class="donut__big" data-count="37274.21" data-decimals="0">0</span>
+              <span class="donut__big" data-count="37274.21">0</span>
               <span>kWh totales</span>
             </div>
           </div>
@@ -240,62 +218,62 @@
     </section>
 
     <!-- ============ CLIMA / ESTACIONES ============ -->
-    <section class="section clima" id="clima">
+    <section class="section" id="clima">
       <div class="container">
         <div class="section__head">
-          <p class="eyebrow reveal">Invierno vs verano · Clima Meteostat</p>
+          <p class="eyebrow">Invierno contra verano</p>
           <h2 class="h2 split">En invierno la casa gasta casi el doble.</h2>
         </div>
 
         <div class="gauges" id="gauges"></div>
 
         <div class="clima__grid">
-          <div class="panel panel--dark reveal-card">
+          <div class="card">
             <h3 class="h3">Según la temperatura del día</h3>
-            <div class="termica" id="termica"></div>
-            <p class="panel__foot">Promedio de kWh por día según la temperatura media del día (estación París-Montsouris). Los días fríos consumen 83 % más que los cálidos.</p>
+            <div id="termica"></div>
+            <p class="card__foot">Promedio de kWh por día según la temperatura media (estación París-Montsouris). Los días fríos consumen 83 % más que los cálidos.</p>
           </div>
-          <div class="panel panel--dark reveal-card">
+          <div class="card">
             <h3 class="h3">Laborable, fin de semana o festivo</h3>
-            <div class="tipodia" id="tipodia"></div>
-            <p class="panel__foot">Promedio de kWh por día. Los fines de semana se consume un 19 % más que entre semana.</p>
+            <div id="tipodia"></div>
+            <p class="card__foot">Promedio de kWh por día. Los fines de semana se consume un 19 % más que entre semana.</p>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ============ PIPELINE ============ -->
-    <section class="section pipeline" id="pipeline">
+    <section class="section" id="pipeline">
       <div class="container">
         <div class="section__head">
-          <p class="eyebrow reveal">Cómo se construyó</p>
+          <p class="eyebrow">Cómo se construyó</p>
           <h2 class="h2 split">Cuatro fuentes, un modelo estrella.</h2>
         </div>
 
         <div class="sources">
-          <article class="source reveal-card" style="--c:var(--yellow)">
+          <article class="source" style="--c:var(--yellow)">
             <span class="tag">Fuente 1</span>
             <h3>UCI ML Repository</h3>
-            <p>Consumo minuto a minuto: potencia, voltaje, intensidad y 3 submedidores. Dic-2006 a nov-2010.</p>
-            <span class="source__meta">.txt · 2.075.259 filas</span>
+            <p>Consumo minuto a minuto: potencia, voltaje, intensidad y 3 submedidores, de dic-2006 a nov-2010.</p>
+            <span class="source__meta">.txt con 2.075.259 filas</span>
           </article>
-          <article class="source reveal-card" style="--c:var(--lilac)">
+          <article class="source" style="--c:var(--lilac)">
             <span class="tag">Fuente 2</span>
             <h3>Meteostat</h3>
             <p>Temperatura, humedad, viento y presión por hora en París-Montsouris, a 7 km de la casa.</p>
-            <span class="source__meta">.csv.gz · horario</span>
+            <span class="source__meta">.csv.gz horario</span>
           </article>
-          <article class="source reveal-card" style="--c:var(--sky)">
+          <article class="source" style="--c:var(--sky)">
             <span class="tag">Fuente 3</span>
             <h3>calendrier.api.gouv.fr</h3>
-            <p>Días festivos oficiales de Francia, 2006-2010, desde la API del gobierno.</p>
-            <span class="source__meta">JSON · 5 archivos</span>
+            <p>Días festivos oficiales de Francia entre 2006 y 2010, desde la API del gobierno.</p>
+            <span class="source__meta">JSON, un archivo por año</span>
           </article>
-          <article class="source reveal-card" style="--c:var(--mint)">
+          <article class="source" style="--c:var(--mint)">
             <span class="tag">Fuente 4</span>
             <h3>Eurostat nrg_pc_204</h3>
             <p>Precio semestral del kWh para hogares en Francia, con y sin impuestos.</p>
-            <span class="source__meta">SDMX-CSV · 9 semestres</span>
+            <span class="source__meta">SDMX-CSV, 9 semestres</span>
           </article>
         </div>
 
@@ -303,22 +281,22 @@
           <svg class="flow__line" viewBox="0 0 1000 20" preserveAspectRatio="none" aria-hidden="true"><path id="flow-path" d="M0 10 H1000"/></svg>
           <div class="flow__step"><span class="flow__icon">E</span><b>Scrapy</b><small>descarga las 4 fuentes con huella SHA-256</small></div>
           <div class="flow__step"><span class="flow__icon">T</span><b>PySpark</b><small>limpieza, cuarentena y normalización a kWh</small></div>
-          <div class="flow__step"><span class="flow__icon">L</span><b>Modelo estrella</b><small>5 dimensiones · 2 tablas de hechos</small></div>
-          <div class="flow__step"><span class="flow__icon">BI</span><b>Power BI + DAX</b><small>medidas, segmentadores y ANOVA</small></div>
+          <div class="flow__step"><span class="flow__icon">L</span><b>Modelo estrella</b><small>5 dimensiones y 2 tablas de hechos</small></div>
+          <div class="flow__step"><span class="flow__icon">BI</span><b>Power BI y DAX</b><small>medidas, segmentadores y ANOVA</small></div>
         </div>
       </div>
     </section>
 
-    <!-- ============ DASHBOARD ============ -->
-    <section class="section dashboard" id="dashboard">
+    <!-- ============ DASHBOARD (bloque oscuro) ============ -->
+    <section class="section dark" id="dashboard">
       <div class="container">
         <div class="section__head section__head--center">
-          <p class="eyebrow reveal">El reporte original</p>
+          <p class="eyebrow">El reporte original</p>
           <h2 class="h2 split">Dashboard en Power BI</h2>
         </div>
         <div class="device" id="device">
           <div class="device__screen">
-            <div class="device__bar"><i></i><i></i><i></i><span>app.powerbi.com · Dashboard_Energia</span></div>
+            <div class="device__bar"><i></i><i></i><i></i><span>app.powerbi.com/Dashboard_Energia</span></div>
             <div class="device__frame">
               <iframe id="pbi" title="Dashboard_Energia" loading="lazy" allowfullscreen
                 src="https://app.powerbi.com/view?r=eyJrIjoiMDk2Mjc3ZTQtOTkwNS00YzcxLWI5MGItOWQ0MjgwMjU5OWIzIiwidCI6IjhkMzY4MzZlLTZiNzUtNGRlNi1iYWI5LTVmNGIxNzc1NDI3ZiIsImMiOjR9"></iframe>
@@ -327,33 +305,34 @@
           <div class="device__base"></div>
         </div>
         <div class="dashboard__actions">
-          <button class="btn btn--accent" id="btn-full" type="button">Pantalla completa</button>
-          <a class="btn btn--ghost" target="_blank" rel="noopener" href="https://app.powerbi.com/view?r=eyJrIjoiMDk2Mjc3ZTQtOTkwNS00YzcxLWI5MGItOWQ0MjgwMjU5OWIzIiwidCI6IjhkMzY4MzZlLTZiNzUtNGRlNi1iYWI5LTVmNGIxNzc1NDI3ZiIsImMiOjR9">Abrir en una pestaña nueva</a>
+          <button class="btn btn--coral" id="btn-full" type="button">Ver en pantalla completa</button>
+          <a class="btn btn--line-light" target="_blank" rel="noopener" href="https://app.powerbi.com/view?r=eyJrIjoiMDk2Mjc3ZTQtOTkwNS00YzcxLWI5MGItOWQ0MjgwMjU5OWIzIiwidCI6IjhkMzY4MzZlLTZiNzUtNGRlNi1iYWI5LTVmNGIxNzc1NDI3ZiIsImMiOjR9">Abrir en una pestaña nueva</a>
         </div>
       </div>
+
+      <footer class="footer">
+        <div class="container footer__inner">
+          <div>
+            <p class="footer__big">Grupo 7</p>
+            <p class="footer__names">Juan Pablo Gallardo, Sebastián López y Juan Sebastián Castaño</p>
+            <p class="footer__meta">Ingeniería de Datasets, proyecto final</p>
+          </div>
+          <div class="footer__links">
+            <a href="https://github.com/juangallardo19/Consumo_Energia_Residencial" target="_blank" rel="noopener" class="btn btn--line-light">Ver el repositorio en GitHub</a>
+            <p class="footer__meta">Datos de UCI, Meteostat, calendrier.api.gouv.fr y Eurostat</p>
+          </div>
+        </div>
+      </footer>
     </section>
   </main>
-
-  <!-- ============ FOOTER ============ -->
-  <footer class="footer">
-    <div class="container footer__inner">
-      <div>
-        <p class="footer__big">Grupo 7</p>
-        <p class="footer__names">Juan Pablo Gallardo · Sebastián López · Juan Sebastián Castaño</p>
-        <p class="footer__meta">Ingeniería de Datasets · Proyecto final</p>
-      </div>
-      <div class="footer__links">
-        <a href="https://github.com/juangallardo19/Consumo_Energia_Residencial" target="_blank" rel="noopener" class="btn btn--ghost">Repositorio en GitHub</a>
-        <p class="footer__meta">Datos: UCI · Meteostat · calendrier.api.gouv.fr · Eurostat</p>
-      </div>
-    </div>
-  </footer>
 
   <div class="tooltip" id="tooltip" role="status" aria-live="polite"></div>
 
   <script src="data/dashboard.js"></script>
   <script src="vendor/gsap.min.js"></script>
   <script src="vendor/ScrollTrigger.min.js"></script>
+  <script src="vendor/SplitText.min.js"></script>
+  <script src="vendor/DrawSVGPlugin.min.js"></script>
   <script src="vendor/lenis.min.js"></script>
   <script src="js/charts.js"></script>
   <script src="js/main.js"></script>

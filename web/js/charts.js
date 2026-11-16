@@ -261,7 +261,7 @@
   }
 
   /* ---------------- Medidor (arco de 270°) ---------------- */
-  function gaugeSVG(value, max, color) {
+  function gaugeSVG(value, max) {
     const r = 70, cx = 90, cy = 90, sweep = 270;
     const a0 = (135 * Math.PI) / 180;
     const arc = (deg) => {
@@ -274,7 +274,7 @@
     return {
       html: `<svg viewBox="0 0 180 160" aria-hidden="true">
         <path class="gauge__track" d="${arc(sweep)}"/>
-        <path class="gauge__arc" d="${arc(sweep)}" stroke="${color}" stroke-dasharray="${len}" stroke-dashoffset="${len}" data-target="${len * (1 - frac)}"/>
+        <path class="gauge__arc" d="${arc(sweep)}" stroke-dasharray="${len}" stroke-dashoffset="${len}" data-target="${len * (1 - frac)}"/>
       </svg>`,
     };
   }

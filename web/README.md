@@ -22,11 +22,11 @@ python -m http.server 8000 --directory web
 ```
 web/
 ├── index.html              <- página
-├── css/styles.css          <- estilos (tema carbón + naranja, tarjetas pastel)
+├── css/styles.css          <- estilos (papel crema, tinta negra y bloques pastel con borde)
 ├── js/charts.js            <- gráficas SVG hechas a mano (barras, curva horaria, dona, medidores)
-├── js/main.js              <- filtros Año/Estación, parallax, animaciones con GSAP + ScrollTrigger + Lenis
+├── js/main.js              <- filtros Año/Estación, parallax y animaciones (GSAP, ScrollTrigger, SplitText, DrawSVG, Lenis)
 ├── data/dashboard.js       <- datos reales agregados (generado, ver abajo)
-├── vendor/                 <- gsap 3.12.5, ScrollTrigger 3.12.5, lenis 1.1.13 (copias locales de npm)
+├── vendor/                 <- gsap 3.14.2 con ScrollTrigger, SplitText y DrawSVG; lenis 1.1.13 (copias de npm)
 └── scripts/generar_datos.py
 ```
 
