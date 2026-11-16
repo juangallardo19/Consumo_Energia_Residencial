@@ -31,6 +31,7 @@ análisis más grande: clima, festivos y tarifas eléctricas.
 Consumo_Energia_Residencial/
 ├── README.md                  <- este archivo
 ├── requirements.txt
+├── web/                       <- página web del dashboard (parallax + datos reales), ver web/README.md
 ├── docs/
 │   └── PIPELINE.md            <- explicación detallada: pipeline, reglas de calidad, modelo PK/FK, Power BI
 ├── extraccion/                <- E: proyecto Scrapy que descarga las 4 fuentes
