@@ -1,12 +1,5 @@
-"""Pipeline de Scrapy: guarda cada respuesta TAL CUAL en datos_sucios/ y deja un manifiesto.
-
-Buenas prácticas aplicadas (capa "bronce" / datos crudos):
-  - El dato crudo no se modifica: se guarda el archivo exactamente como lo entregó la fuente.
-  - Trazabilidad: por cada archivo se anota URL, fecha de descarga, tamaño y huella SHA-256
-    en datos_sucios/_manifiesto_extraccion.json. Si la fuente cambia, la huella cambia.
-  - El zip de UCI además se descomprime (sigue siendo dato crudo, solo cambia el empaque).
-"""
 import hashlib
+import io
 import json
 import zipfile
 from datetime import datetime, timezone
@@ -28,9 +21,14 @@ class GuardarCrudoPipeline:
         contenido = item["contenido"]
         if not contenido:
             raise DropItem(f"Respuesta vacía para {item['url']}")
+        problema = self.revisar_formato(item["archivo"], contenido)
+        if problema:
+            raise DropItem(f"{item['archivo']} descartado: {problema} ({item['url']})")
 
         destino = self.carpeta / item["archivo"]
-        destino.write_bytes(contenido)
+        temporal = destino.with_name(destino.name + ".parcial")
+        temporal.write_bytes(contenido)
+        temporal.replace(destino)
 
         registro = {
             "fuente": item["fuente"],
@@ -50,8 +48,32 @@ class GuardarCrudoPipeline:
 
         self.manifiesto[item["archivo"]] = registro
         spider.logger.info(f"Guardado {destino.name} ({len(contenido):,} bytes)")
-        # Se devuelve un resumen (sin los bytes) para que el log no imprima el archivo entero
         return {k: v for k, v in registro.items()}
+
+    @staticmethod
+    def revisar_formato(archivo, contenido):
+        if archivo.endswith(".zip"):
+            try:
+                with zipfile.ZipFile(io.BytesIO(contenido)) as z:
+                    if z.testzip() is not None or not z.namelist():
+                        return "zip dañado o vacío"
+            except zipfile.BadZipFile:
+                return "no es un zip válido"
+        elif archivo.endswith(".gz"):
+            if contenido[:2] != b"\x1f\x8b":
+                return "no es un archivo gzip"
+        elif archivo.endswith(".json"):
+            try:
+                datos = json.loads(contenido)
+            except ValueError:
+                return "no es un JSON válido"
+            if not isinstance(datos, dict) or not datos:
+                return "JSON vacío o con estructura inesperada"
+        elif archivo.endswith(".csv"):
+            encabezado = contenido[:500].decode("utf-8", errors="replace")
+            if "TIME_PERIOD" not in encabezado or "OBS_VALUE" not in encabezado:
+                return "CSV sin las columnas esperadas"
+        return None
 
     def close_spider(self, spider):
         datos = sorted(self.manifiesto.values(), key=lambda m: m["archivo"])

@@ -1,20 +1,5 @@
-"""Validación independiente del ETL: ¿quedaron bien los datos limpios?
-
-Se ejecuta DESPUÉS de etl_energia.py y revisa los resultados con pandas (otra herramienta distinta a Spark),
-para no "corregirse la tarea a sí mismo". Cada prueba imprime PASA o FALLA; si alguna falla el script
-termina con código 1 (así se puede usar como compuerta antes de cargar a Power BI).
-
-Pruebas por dimensión de calidad:
-    Completitud ........ ninguna tabla tiene nulos; balance leídas = aceptadas + rechazadas
-    Validez ............ sin negativos; rangos físicos; tipos correctos
-    Unicidad ........... llaves primarias sin repetir
-    Integridad ref. .... toda llave foránea de los hechos existe en su dimensión
-    Consistencia ....... suma por electrodoméstico = total; calendario sin huecos
-    Exactitud .......... conciliación: se recalcula desde el archivo CRUDO y se compara con el resultado
-
-Uso:   python etl/validar_calidad.py
-"""
 import json
+import sqlite3
 import sys
 from pathlib import Path
 
@@ -51,7 +36,6 @@ def main():
             if c.startswith("Fecha"):
                 df[c] = pd.to_datetime(df[c])
 
-    # ------------------------------------------------------------------ COMPLETITUD
     for n, df in t.items():
         nulos = int(df.isna().sum().sum())
         prueba("Completitud", f"{n} sin valores nulos", nulos == 0, f"{nulos} nulos")
@@ -63,7 +47,6 @@ def main():
     cobertura = fact["Fecha"].dt.normalize().isin(t["Dim_Clima"]["Fecha"]).mean()
     prueba("Completitud", "Clima disponible para >= 90 % de las horas con consumo", cobertura >= 0.90, f"{cobertura:.1%}")
 
-    # ------------------------------------------------------------------ VALIDEZ
     medidas = [c for c in fact.columns if c.endswith(("kWh", "kVArh", "kW", "_V", "_A"))]
     negativos = int((fact[medidas] < 0).sum().sum()) + int((largo["Energia_kWh"] < 0).sum())
     prueba("Validez", "Sin valores negativos en las medidas", negativos == 0, f"{negativos} negativos")
@@ -80,7 +63,6 @@ def main():
            (t["Dim_Tarifa"]["Precio_kWh_Sin_Impuestos_EUR"].between(0, 1)
             & (t["Dim_Tarifa"]["Precio_kWh_Con_Impuestos_EUR"] >= t["Dim_Tarifa"]["Precio_kWh_Sin_Impuestos_EUR"])).all())
 
-    # ------------------------------------------------------------------ UNICIDAD (llaves primarias)
     pks = {"Dim_Fecha": ["Fecha"], "Dim_Hora": ["Hora"], "Dim_Clima": ["Fecha"], "Dim_Tarifa": ["ID_Periodo_Tarifa"],
            "Dim_Electrodomestico": ["ID_Electrodomestico"], "Fact_Consumo_Hora": ["Fecha", "Hora"],
            "Fact_Consumo_Electrodomestico": ["Fecha", "Hora", "ID_Electrodomestico"]}
@@ -88,7 +70,6 @@ def main():
         dup = int(t[n].duplicated(pk).sum())
         prueba("Unicidad", f"{n}: llave {' + '.join(pk)} sin repetir", dup == 0, f"{dup} repetidas")
 
-    # ------------------------------------------------------------------ INTEGRIDAD REFERENCIAL (FK -> PK)
     fks = [("Fact_Consumo_Hora", "Fecha", "Dim_Fecha", "Fecha"),
            ("Fact_Consumo_Hora", "Hora", "Dim_Hora", "Hora"),
            ("Fact_Consumo_Hora", "ID_Periodo_Tarifa", "Dim_Tarifa", "ID_Periodo_Tarifa"),
@@ -100,7 +81,6 @@ def main():
         huerfanas = int((~t[hija][fk].isin(t[padre][pk])).sum())
         prueba("Integridad ref.", f"{hija}.{fk} -> {padre}.{pk}", huerfanas == 0, f"{huerfanas} huérfanas")
 
-    # ------------------------------------------------------------------ CONSISTENCIA
     dif = abs(largo["Energia_kWh"].sum() - fact["Energia_Activa_kWh"].sum())
     prueba("Consistencia", "Suma por electrodoméstico = energía total", dif < 0.01,
            f"diferencia {dif:.4f} kWh de {fact['Energia_Activa_kWh'].sum():,.1f}")
@@ -119,12 +99,10 @@ def main():
            ((d["EsFestivo"] == "Sí") == (d["TipoDía"] == "Festivo")).all()
            and ((d["TipoDía"] == "Laborable") == ((d["EsFestivo"] == "No") & (d["EsFinDeSemana"] == "No"))).all())
 
-    # ------------------------------------------------------------------ EXACTITUD (conciliación con el origen)
     total = fact["Energia_Activa_kWh"].sum()
     prueba("Exactitud", "Energía cargada = energía que calculó el ETL (sin pérdidas al cargar)",
            abs(total - m["energia_kwh_horas_aceptadas"]) < 0.5, f"{total:,.3f} vs {m['energia_kwh_horas_aceptadas']:,.3f} kWh")
 
-    # Recalcular algunos días DIRECTAMENTE desde el archivo crudo con pandas y comparar hora por hora
     crudo = pd.read_csv(CRUDO, sep=";", dtype=str, na_values=["?", ""])
     crudo["Fecha"] = pd.to_datetime(crudo["Date"], format="%d/%m/%Y")
     dias = ["2007-02-10", "2008-07-14", "2009-12-24", "2010-06-01"]
@@ -137,7 +115,16 @@ def main():
     prueba("Exactitud", f"Recalculo desde el crudo de {len(dias)} días ({len(comp)} horas) coincide con el hecho",
            len(comp) > 0 and peor < 1e-4, f"máxima diferencia {peor:.6f} kWh")
 
-    # ------------------------------------------------------------------ RESUMEN
+    with sqlite3.connect(LIMPIOS / "energia_residencial.db") as con:
+        con.execute("PRAGMA foreign_keys = ON")
+        for n, df in t.items():
+            filas_bd = con.execute(f"SELECT COUNT(*) FROM {n}").fetchone()[0]
+            prueba("Exactitud", f"Base de datos: {n} tiene las mismas filas que el archivo", filas_bd == len(df),
+                   f"{filas_bd:,} vs {len(df):,}")
+        violaciones = con.execute("PRAGMA foreign_key_check").fetchall()
+        prueba("Integridad ref.", "Base de datos SQLite sin violaciones de llaves foráneas", not violaciones,
+               f"{len(violaciones)} violaciones")
+
     fallas = [r for r in resultados if not r[2]]
     lineas = ["# Reporte de validación", "", f"Pruebas: {len(resultados)} | Pasan: {len(resultados) - len(fallas)} | "
               f"Fallan: {len(fallas)}", "", "| Resultado | Dimensión | Prueba | Detalle |", "|---|---|---|---|"]

@@ -31,21 +31,29 @@ análisis más grande: clima, festivos y tarifas eléctricas.
 Consumo_Energia_Residencial/
 ├── README.md                  <- este archivo
 ├── requirements.txt
+├── pipeline.py                <- ORQUESTADOR: corre todo el flujo con un solo comando
+├── Dashboard_Energia.pbix     <- informe de Power BI
 ├── web/                       <- página web del dashboard (parallax + datos reales), ver web/README.md
 ├── docs/
-│   └── PIPELINE.md            <- explicación detallada: pipeline, reglas de calidad, modelo PK/FK, Power BI
+│   ├── PIPELINE.md            <- explicación detallada: pipeline, reglas de calidad, modelo PK/FK, Power BI
+│   ├── CONTEXTO_PROYECTO.md   <- enunciado, decisiones, flujo y estado de entregables
+│   └── GUION_REPASO.md        <- preguntas y respuestas para preparar la sustentación
+├── anova/
+│   ├── anova_energia.py       <- ANOVA de 3 hipótesis, lee la base de datos SQLite
+│   └── resultados_anova.md    <- H0/H1, supuestos, p-valores, Tukey y conclusiones
 ├── extraccion/                <- E: proyecto Scrapy que descarga las 4 fuentes
 │   ├── scrapy.cfg
 │   └── energia_scraper/ (settings.py, pipelines.py, spiders/fuentes.py)
 ├── datos_sucios/              <- datos crudos tal como llegan (no se tocan) + manifiesto con huella SHA-256
 ├── etl/
 │   ├── etl_energia.py         <- T + L: limpieza con PySpark y construcción del modelo estrella
-│   └── validar_calidad.py     <- pruebas automáticas de calidad sobre el resultado (38 pruebas)
+│   └── validar_calidad.py     <- pruebas automáticas de calidad sobre el resultado (46 pruebas)
 ├── datos_limpios/             <- (se genera, no está en GitHub) tablas finales para Power BI (CSV y parquet/)
 │   ├── Dim_Fecha, Dim_Hora, Dim_Clima, Dim_Tarifa, Dim_Electrodomestico
 │   ├── Fact_Consumo_Hora, Fact_Consumo_Electrodomestico
 │   ├── reporte_calidad.md     <- cuántas filas afectó cada regla
-│   ├── reporte_validacion.md  <- resultado de las 38 pruebas
+│   ├── reporte_validacion.md  <- resultado de las 46 pruebas
+│   ├── energia_residencial.db <- base de datos SQLite: las 7 tablas con PK y FK + ANOVA_Resumen y ANOVA_Grupos
 │   └── metricas_etl.json
 └── rechazados/                <- (se genera, no está en GitHub) cuarentena: cada fila eliminada con su motivo
 ```
@@ -55,6 +63,17 @@ Consumo_Energia_Residencial/
 En GitHub solo están el código y los datos crudos. Las carpetas `datos_limpios/` y `rechazados/` **no se
 suben**: cada integrante las genera en su computador con el ETL. Así el repositorio pesa poco y nadie sube
 resultados desactualizados.
+
+> **Atajo: todo el flujo automatizado.** Después del paso 0 (requisitos), un solo comando ejecuta en orden
+> Extract → Transform → Load (CSV, Parquet y SQLite) → Validación → ANOVA. Si la validación falla, se
+> detiene y no deja pasar datos malos:
+>
+> ```bash
+> python pipeline.py
+> ```
+>
+> Con `python pipeline.py --extraer` vuelve a descargar las fuentes con Scrapy. Los pasos 2 a 4 de abajo
+> explican qué hace cada etapa, por si quieres correrlas por separado.
 
 ### Paso 0 · Requisitos (una sola vez)
 
@@ -121,7 +140,7 @@ Al terminar debe decir `ETL terminado` y crear:
 python etl/validar_calidad.py
 ```
 
-La última línea debe ser **`38/38 pruebas pasan`**. Si alguna prueba dice `FALLA`, no uses los datos en
+La última línea debe ser **`46/46 pruebas pasan`**. Si alguna prueba dice `FALLA`, no uses los datos en
 Power BI. Revisa `datos_limpios/reporte_validacion.md`.
 
 ### Paso 5 · Conectar Power BI

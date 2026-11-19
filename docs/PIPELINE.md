@@ -27,7 +27,7 @@ asegurando su calidad y disponibilidad para la toma de decisiones.*
  └──────────────┘                                    ▼                │
                                               rechazados/             ▼
                                          (cuarentena + motivo)  validar_calidad.py
-                                                                (38 pruebas: PASA/FALLA)
+                                                                (46 pruebas: PASA/FALLA)
 ```
 
 Esto sigue la idea de **capas** que se usa en la industria (arquitectura "medallón" de Databricks):
@@ -307,7 +307,7 @@ tarea a sí mismo". Se agrupa en las **6 dimensiones de calidad de datos** que u
 | **Consistencia** | ¿Los datos se contradicen? | Suma de las 4 zonas = total, en cada hora. Calendario continuo. 10-11 festivos por año. TipoDía coherente. |
 | **Exactitud (conciliación)** | ¿Los números son los reales? | Energía cargada = energía calculada por el ETL. **Recálculo desde el archivo crudo** de 4 días (96 horas) con pandas: diferencia 0,000000 kWh. |
 
-Resultado actual: **38/38 pruebas pasan** (`datos_limpios/reporte_validacion.md`). El script termina con
+Resultado actual: **46/46 pruebas pasan** (`datos_limpios/reporte_validacion.md`). El script termina con
 código de salida 1 si alguna falla, así funciona como **compuerta de calidad**: si no pasa, no se carga a
 Power BI.
 

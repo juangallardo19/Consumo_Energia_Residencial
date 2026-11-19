@@ -1,25 +1,7 @@
-"""Spider de extracción: descarga las 4 fuentes del proyecto a datos_sucios/.
-
-Fuentes (todas públicas y abiertas):
-  1. energia  -> UCI ML Repository: consumo eléctrico minuto a minuto de una casa en Sceaux (Francia),
-                 dic-2006 a nov-2010. Formato: .zip con un .txt separado por ';'.
-  2. clima    -> Meteostat (bulk): observaciones HORARIAS de la estación París-Montsouris (07156),
-                 a ~7 km de Sceaux. Formato: .csv.gz sin encabezado.
-  3. festivos -> API oficial del gobierno francés (calendrier.api.gouv.fr): días festivos de
-                 Francia metropolitana, un JSON por año (2006-2010).
-  4. tarifas  -> Eurostat (nrg_pc_204): precio semestral del kWh para hogares en Francia
-                 (banda de consumo 2.500-4.999 kWh/año), con y sin impuestos. Formato: SDMX-CSV.
-
-Uso (desde la carpeta extraccion/):
-    scrapy crawl fuentes                     # todas las fuentes
-    scrapy crawl fuentes -a solo=clima       # solo una (energia | clima | festivos | tarifas)
-"""
 import scrapy
 
 ANIOS_FESTIVOS = range(2006, 2011)
 
-# Espejos de respaldo: si la URL oficial no responde, se intenta con una copia idéntica del archivo
-# (queda anotado en el manifiesto cuál URL se usó realmente).
 RESPALDOS = {
     "household_power_consumption.zip": (
         "Espejo GitHub jbrownlee/Datasets (copia del zip original de UCI)",
