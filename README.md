@@ -33,7 +33,7 @@ Consumo_Energia_Residencial/
 ├── requirements.txt
 ├── pipeline.py                <- ORQUESTADOR: corre todo el flujo con un solo comando
 ├── Dashboard_Energia.pbix     <- informe de Power BI
-├── web/                       <- página web del dashboard (parallax + datos reales), ver web/README.md
+├── web/                       <- página web en Angular con los datos del .pbix, parallax y ANOVA, ver web/README.md
 ├── docs/
 │   ├── PIPELINE.md            <- explicación detallada: pipeline, reglas de calidad, modelo PK/FK, Power BI
 │   ├── CONTEXTO_PROYECTO.md   <- enunciado, decisiones, flujo y estado de entregables
@@ -188,3 +188,10 @@ ANOVA sugerida (ejemplo del enunciado): consumo diario según `TipoDía` (Labora
 También se puede hacer por `Estación` o por `Categoria_Termica`.
 
 La explicación completa del ETL está en [docs/PIPELINE.md](docs/PIPELINE.md).
+
+## Página web
+
+La carpeta `web/` es una aplicación **Angular** que presenta el proyecto, los 10 requerimientos, el ANOVA y el
+dashboard publicado. Sus datos se extraen **del modelo del informe de Power BI** (`Dashboard_Energia.pbix`) con
+`web/scripts/extraer_powerbi.py`, no de los CSV del ETL, así que la web muestra exactamente lo mismo que el reporte.
+Para verla: `cd web`, `npm install` y `npm start`. Detalles en [web/README.md](web/README.md).

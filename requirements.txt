@@ -4,3 +4,4 @@ pandas
 pyarrow
 scrapy>=2.13
 scipy        # para la prueba ANOVA (siguiente fase)
+pbixray      # solo para regenerar los datos de la web desde el .pbix (web/scripts/extraer_powerbi.py)
